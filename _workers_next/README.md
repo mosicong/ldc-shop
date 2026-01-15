@@ -88,11 +88,7 @@
 | EPay / Linux DO Credit | 通知 URL (Notify URL) | `https://ldc-shop.xxx.workers.dev/api/notify` |
 | EPay / Linux DO Credit | 回调 URL (Return URL) | `https://ldc-shop.xxx.workers.dev/callback` |
 
-#### 5. 重新部署
-
-回到 **Deployments** 页面，点击最新部署记录的 **Retry deployment**。
-
-#### 6. 首次访问
+#### 5. 首次访问
 
 访问你的 Workers 域名，首页会自动创建所有数据库表。
 
