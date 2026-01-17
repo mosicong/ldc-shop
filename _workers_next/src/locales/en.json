@@ -256,7 +256,9 @@
                 "step3Title": "Get your Chat ID",
                 "step3Desc": "Send any message (like 'hello') to your new bot, then visit https://api.telegram.org/bot<YourToken>/getUpdates in your browser. Look for 'chat' and find the 'id' number inside it - that number is your Chat ID. For example, if you see id:123456789, enter 123456789.",
                 "step4Title": "Test the Connection",
-                "step4Desc": "After saving, click the 'Send Test Message' button to verify your configuration. If you receive a message, you're all set!"
+                "step4Desc": "After saving, click the 'Send Test Message' button to verify your configuration. If you receive a message, you're all set!",
+                "language": "Notification Language",
+                "languageHint": "Choose the language for Telegram notification messages"
             }
         },
         "export": {

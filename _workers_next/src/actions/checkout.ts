@@ -331,14 +331,20 @@ export async function createOrder(productId: string, quantity: number = 1, email
             });
 
             // Notify admin for points-only payment
-            notifyAdminPaymentSuccess({
-                orderId,
-                productName: product.name,
-                amount: pointsToUse.toString() + ' (积分)',
-                username: username || user?.username,
-                email: email || user?.email,
-                tradeNo: 'POINTS_REDEMPTION'
-            }).catch(err => console.error('[Notification] Points payment notify failed:', err));
+            console.log('[Checkout] Points payment completed, sending notification for order:', orderId);
+            try {
+                await notifyAdminPaymentSuccess({
+                    orderId,
+                    productName: product.name,
+                    amount: pointsToUse.toString() + ' (积分)',
+                    username: username || user?.username,
+                    email: email || user?.email,
+                    tradeNo: 'POINTS_REDEMPTION'
+                });
+                console.log('[Checkout] Points payment notification sent successfully');
+            } catch (err) {
+                console.error('[Notification] Points payment notify failed:', err);
+            }
 
         } else {
             await db.insert(orders).values({

@@ -375,9 +375,11 @@ export async function saveNotificationSettings(formData: FormData) {
 
     const token = (formData.get('telegramBotToken') as string || '').trim()
     const chatId = (formData.get('telegramChatId') as string || '').trim()
+    const language = (formData.get('telegramLanguage') as string || 'zh').trim()
 
     await setSetting('telegram_bot_token', token)
     await setSetting('telegram_chat_id', chatId)
+    await setSetting('telegram_language', language)
 
     revalidatePath('/admin/notifications')
 }

@@ -9,7 +9,9 @@ export default async function NotificationsPage() {
     return (
         <NotificationsContent settings={{
             telegramBotToken: settings.token || '',
-            telegramChatId: settings.chatId || ''
+            telegramChatId: settings.chatId || '',
+            telegramLanguage: settings.language || 'zh'
         }} />
     )
 }
+

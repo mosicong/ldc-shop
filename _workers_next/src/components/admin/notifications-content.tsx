@@ -14,6 +14,7 @@ interface NotificationsContentProps {
     settings: {
         telegramBotToken: string
         telegramChatId: string
+        telegramLanguage: string
     }
 }
 
@@ -21,6 +22,7 @@ export function NotificationsContent({ settings }: NotificationsContentProps) {
     const { t } = useI18n()
     const [token, setToken] = useState(settings.telegramBotToken || '')
     const [chatId, setChatId] = useState(settings.telegramChatId || '')
+    const [language, setLanguage] = useState(settings.telegramLanguage || 'zh')
     const [isLoading, setIsLoading] = useState(false)
     const [isTesting, setIsTesting] = useState(false)
 
@@ -111,6 +113,29 @@ export function NotificationsContent({ settings }: NotificationsContentProps) {
                                 onChange={e => setChatId(e.target.value)}
                                 placeholder={t('admin.settings.notifications.telegramChatIdPlaceholder') || ''}
                             />
+                        </div>
+                        <div className="space-y-2">
+                            <Label>{t('admin.settings.notifications.language')}</Label>
+                            <div className="flex gap-2">
+                                <Button
+                                    type="button"
+                                    variant={language === 'zh' ? 'default' : 'outline'}
+                                    size="sm"
+                                    onClick={() => setLanguage('zh')}
+                                >
+                                    中文
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant={language === 'en' ? 'default' : 'outline'}
+                                    size="sm"
+                                    onClick={() => setLanguage('en')}
+                                >
+                                    English
+                                </Button>
+                            </div>
+                            <input type="hidden" name="telegramLanguage" value={language} />
+                            <p className="text-xs text-muted-foreground">{t('admin.settings.notifications.languageHint')}</p>
                         </div>
 
                         <div className="flex gap-4">

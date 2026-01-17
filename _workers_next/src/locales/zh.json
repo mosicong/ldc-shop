@@ -256,7 +256,9 @@
                 "step3Title": "获取 Chat ID",
                 "step3Desc": "给你刚创建的机器人发送任意消息（如「你好」），然后在浏览器中访问 https://api.telegram.org/bot<你的Token>/getUpdates。在返回的内容中找到 chat 下面的 id 数字，这个数字就是你的 Chat ID。例如看到 id:123456789 则填写 123456789。",
                 "step4Title": "测试连接",
-                "step4Desc": "保存设置后，点击「发送测试消息」按钮验证配置是否正确。如果收到消息，说明配置成功！"
+                "step4Desc": "保存设置后，点击「发送测试消息」按钮验证配置是否正确。如果收到消息，说明配置成功！",
+                "language": "通知语言",
+                "languageHint": "选择 Telegram 通知消息使用的语言"
             }
         },
         "export": {

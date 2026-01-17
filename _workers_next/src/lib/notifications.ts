@@ -1,12 +1,13 @@
-import { db } from "./db"
 import { getSetting } from "./db/queries"
 
 export async function getNotificationSettings() {
     const token = await getSetting('telegram_bot_token')
     const chatId = await getSetting('telegram_chat_id')
+    const language = await getSetting('telegram_language') || 'zh' // 默认中文
     return {
         token,
-        chatId
+        chatId,
+        language
     }
 }
 
@@ -47,6 +48,38 @@ export async function sendTelegramMessage(text: string) {
     }
 }
 
+// 消息模板
+const messages = {
+    zh: {
+        paymentTitle: '💰 收到新付款！',
+        order: '订单号',
+        product: '商品',
+        amount: '金额',
+        user: '用户',
+        tradeNo: '交易号',
+        guest: '访客',
+        noEmail: '无邮箱',
+        refundTitle: '↩️ 收到退款申请',
+        reason: '原因',
+        noReason: '未提供原因',
+        manageRefunds: '管理退款'
+    },
+    en: {
+        paymentTitle: '💰 New Payment Received!',
+        order: 'Order',
+        product: 'Product',
+        amount: 'Amount',
+        user: 'User',
+        tradeNo: 'Trade No',
+        guest: 'Guest',
+        noEmail: 'No email',
+        refundTitle: '↩️ Refund Requested',
+        reason: 'Reason',
+        noReason: 'No reason provided',
+        manageRefunds: 'Manage Refunds'
+    }
+}
+
 export async function notifyAdminPaymentSuccess(order: {
     orderId: string,
     productName: string,
@@ -55,19 +88,19 @@ export async function notifyAdminPaymentSuccess(order: {
     username?: string | null,
     tradeNo?: string | null
 }) {
-    const text = `
-<b>💰 New Payment Received!</b>
+    const { language } = await getNotificationSettings()
+    const t = messages[language as keyof typeof messages] || messages.zh
 
-<b>Order:</b> <code>${order.orderId}</code>
-<b>Product:</b> ${order.productName}
-<b>Amount:</b> ${order.amount} Credits
-<b>User:</b> ${order.username || 'Guest'} (${order.email || 'No email'})
-<b>Trade No:</b> <code>${order.tradeNo || 'N/A'}</code>
+    const text = `
+<b>${t.paymentTitle}</b>
+
+<b>${t.order}:</b> <code>${order.orderId}</code>
+<b>${t.product}:</b> ${order.productName}
+<b>${t.amount}:</b> ${order.amount}
+<b>${t.user}:</b> ${order.username || t.guest} (${order.email || t.noEmail})
+<b>${t.tradeNo}:</b> <code>${order.tradeNo || 'N/A'}</code>
 `.trim()
 
-    // Send without waiting (fire-and-forget for caller, but we await here to catch errors if needed by caller)
-    // Actually best pattern for Cloudflare Workers is ctx.waitUntil, but here we don't have ctx access easily.
-    // We just return the promise.
     return sendTelegramMessage(text)
 }
 
@@ -78,17 +111,21 @@ export async function notifyAdminRefundRequest(order: {
     username?: string | null,
     reason?: string | null
 }) {
+    const { language } = await getNotificationSettings()
+    const t = messages[language as keyof typeof messages] || messages.zh
+
     const text = `
-<b>↩️ Refund Requested</b>
+<b>${t.refundTitle}</b>
 
-<b>Order:</b> <code>${order.orderId}</code>
-<b>Product:</b> ${order.productName}
-<b>Amount:</b> ${order.amount} Credits
-<b>User:</b> ${order.username || 'Guest'}
-<b>Reason:</b> ${order.reason || 'No reason provided'}
+<b>${t.order}:</b> <code>${order.orderId}</code>
+<b>${t.product}:</b> ${order.productName}
+<b>${t.amount}:</b> ${order.amount}
+<b>${t.user}:</b> ${order.username || t.guest}
+<b>${t.reason}:</b> ${order.reason || t.noReason}
 
-<a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/refunds">Manage Refunds</a>
+<a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/refunds">${t.manageRefunds}</a>
 `.trim()
 
     return sendTelegramMessage(text)
 }
+
